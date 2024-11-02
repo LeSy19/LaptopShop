@@ -34,7 +34,10 @@ const HotProducts = () => {
                 console.log('API Response:', response);
                 if (response && response.data) {
                     if (Array.isArray(response.data.result)) {
-                        const filteredProducts = response.data.result.filter(product => product.hot && product.active);
+                        const filteredProducts = response.data.result.filter(product => product.hot && product.active
+                                                                                       && product.brand?.active
+                                                                                       && product.category?.active
+                        );
                         setProducts(filteredProducts.slice(0, 4)); // Chỉ lấy 4 sản phẩm hot và active
                     } else {
                         console.error('response.data.result is not an array:', response.data.result);

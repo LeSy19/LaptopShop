@@ -1,0 +1,8 @@
+.inactive-messages {
+    position: absolute; /* Đặt vị trí của thông báo */
+    bottom: 0; /* Đưa nó xuống dưới cùng */
+    left: 0; /* Đưa nó sang bên trái */
+   
+    color: #f5222d; /* Màu chữ đỏ */
+    
+}

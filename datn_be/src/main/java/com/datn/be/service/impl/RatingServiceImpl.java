@@ -1,5 +1,9 @@
 package com.datn.be.service.impl;
 
+import com.datn.be.dto.request.rating.RatingRequestDto;
+import com.datn.be.dto.request.rating.RatingUpdateRequestDTO;
+import com.datn.be.dto.response.rating.RatingResponseDto;
+import com.datn.be.exception.ResourceNotFoundException;
 import com.datn.be.model.Product;
 import com.datn.be.model.Rating;
 import com.datn.be.model.User; // Import User model
@@ -51,19 +55,32 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Rating updateRating(Long id, Rating rating) {
-        Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rating not found"));
-        existingRating.setContent(rating.getContent());
-        existingRating.setNumberStars(rating.getNumberStars());
-        // Cập nhật phản hồi từ admin (nếu có)
-        if (rating.getAdminRespone() != null) {
-            existingRating.setAdminRespone(rating.getAdminRespone());
-        }
+    public RatingResponseDto updateRating(RatingUpdateRequestDTO ratingUpdateRequestDTO) {
+            Rating rating = this.getRatingById(ratingUpdateRequestDTO.getId());
 
-        existingRating.setUpdatedAt(Instant.now());
-        ratingRepository.save(existingRating);
-        return existingRating;
+            rating.setAdminRespone(ratingUpdateRequestDTO.getAdminRespone());
+            return RatingResponseDto.fromRatingToRatingResponse(ratingRepository.save(rating));
     }
+
+    @Override
+    public Rating getRatingById(Long id) {
+        return ratingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Rating not found"));
+    }
+
+//    @Override
+//    public Rating updateRating(Long id, Rating rating) {
+//        Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rating not found"));
+//        existingRating.setContent(rating.getContent());
+//        existingRating.setNumberStars(rating.getNumberStars());
+//        // Cập nhật phản hồi từ admin (nếu có)
+//        if (rating.getAdminRespone() != null) {
+//            existingRating.setAdminRespone(rating.getAdminRespone());
+//        }
+//
+//        existingRating.setUpdatedAt(Instant.now());
+//        ratingRepository.save(existingRating);
+//        return existingRating;
+//    }
 
     @Override
     public void deleteRating(Long id) {
